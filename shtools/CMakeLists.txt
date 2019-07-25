@@ -2,7 +2,7 @@
 set(shtools_VERSION 1.0)
 
 define_module(LIBRARY shtools=${shtools_VERSION}
-  DEPENDS BuildSystem>=1.5 Fortran)
+  DEPENDS BuildSystem>=1.6 Fortran C++>=14 OpenMP Boost)
 
 # grap all sources sans python extension
 file(GLOB shtools_f95_SOURCES CONFIGURE_DEPENDS shtools/*.f95 shtools/*.F95)

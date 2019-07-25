@@ -68,15 +68,35 @@ enum class Sampling : int {
     , equallySpaced = 2
 };
 
+struct GridParams {
+    /** Normalization.
+     */
+    Norm norm = Norm::geodesy;
+
+    /** Condon-Shortley phase factor application.
+     */
+    bool csPhase = false;
+
+    /** Maximum degree used in MakeGridDH.
+     */
+    boost::optional<int> lmaxCalc = boost::none;
+
+    /** Deallocate local data if true.
+     */
+    bool deallocate = false;
+};
+
 /** Generates DH grid from sphedical harmonics.
  *
  *  \param sh list of parametrs in the form to build both matrices.
  */
 DHGrid makeGridDH(const std::vector<double> &sh
                   , Sampling sampling = Sampling::equallySampled
-                  , Norm norm = Norm::geodesy
-                  , bool csPhase = false
-                  , const boost::optional<int> &lmaxCalc = boost::none);
+                  , const GridParams &gridParams = {});
+
+std::vector<double> expand(const std::vector<double> &sh
+                           , const math::Points2 &lonlat
+                           , const GridParams &gridParams = {});
 
 } // namespace shtools
 

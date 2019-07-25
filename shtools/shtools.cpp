@@ -40,6 +40,13 @@ void pymakegriddh_(int *exitstatus
                    , const int *cilm_d0, const int *cilm_d1, const int *cilm_d2
                    , const int *griddh_d0, const int *griddh_d1);
 
+double pymakegridpoint_(double *cilm, const int *lmax
+                        , const double *lat, const double *lon
+                        , const int *norm, const int *csphase
+                        , const int *dealloc
+                        , const int *cilm_d0, const int *cilm_d1
+                        , const int *cilm_d2);
+
 } // extern "C"
 
 namespace shtools {
@@ -90,8 +97,7 @@ std::vector<double> prepareCilm(int &lmax, const std::vector<double> &sh)
 /** Generates DH longlat grid from spherical harmonics.
  */
 DHGrid makeGridDH(const std::vector<double> &sh, Sampling sampling
-                  , Norm norm, bool csPhase
-                  , const boost::optional<int> &lmaxCalc)
+                  , const GridParams &gridParams)
 {
     int lmax;
     auto cilm(prepareCilm(lmax, sh));
@@ -100,9 +106,9 @@ DHGrid makeGridDH(const std::vector<double> &sh, Sampling sampling
     int n(2 * lmax + 2);
 
     const auto sampling_(static_cast<int>(sampling));
-    const auto norm_(static_cast<int>(norm));
-    const auto csPhase_(csPhase ? -1 : 1);
-    const auto lmaxCalc_(lmaxCalc ? *lmaxCalc : lmax);
+    const auto norm_(static_cast<int>(gridParams.norm));
+    const auto csPhase_(gridParams.csPhase ? -1 : 1);
+    const auto lmaxCalc_(gridParams.lmaxCalc ? *gridParams.lmaxCalc : lmax);
 
     DHGrid grid(sampling_ * n, n);
 
@@ -140,6 +146,34 @@ DHGrid makeGridDH(const std::vector<double> &sh, Sampling sampling
     }
 
     return grid;
+}
+
+std::vector<double> expand(const std::vector<double> &sh
+                           , const math::Points2 &lonlat
+                           , const GridParams &gridParams)
+{
+    int lmax;
+    auto cilm(prepareCilm(lmax, sh));
+
+    const auto norm_(static_cast<int>(gridParams.norm));
+    const auto csPhase_(gridParams.csPhase ? -1 : 1);
+    const int &dealloc_(gridParams.deallocate);
+
+    const auto size(lmax + 1);
+    const int cilm_d0(2);
+    const int cilm_d1(size);
+    const int cilm_d2(size);
+
+    std::vector<double> values;
+    values.reserve(lonlat.size());
+    for (const auto &p : lonlat) {
+        values.push_back
+            (pymakegridpoint_
+             (cilm.data(), &lmax, &p(0), &p(1), &norm_, &csPhase_, &dealloc_
+              , &cilm_d0, &cilm_d1, &cilm_d2));
+    }
+
+    return values;
 }
 
 } // namespace shtools
