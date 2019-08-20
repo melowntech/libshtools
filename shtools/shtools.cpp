@@ -131,18 +131,23 @@ DHGrid makeGridDH(const std::vector<double> &sh, Sampling sampling
     case 1:
         LOGTHROW(err2, std::runtime_error)
             << "makeGridDH: Improper dimensions of input array.";
+        break;
     case 2:
         LOGTHROW(err2, std::runtime_error)
             << "makeGridDH: Improper bounds for input variable.";
+        break;
     case 3:
         LOGTHROW(err2, std::runtime_error)
             << "makeGridDH: Error allocating memory.";
+        break;
     case 4:
         LOGTHROW(err2, std::runtime_error)
             << "makeGridDH: File IO error.";
+        break;
     default:
         LOGTHROW(err2, std::runtime_error)
             << "makeGridDH: Invalid exit status <" << exitstatus << ">.";
+        break;
     }
 
     return grid;
