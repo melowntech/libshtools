@@ -9,7 +9,7 @@ file(GLOB shtools_f95_SOURCES CONFIGURE_DEPENDS shtools/*.f95 shtools/*.F95)
 
 list(LENGTH shtools_f95_SOURCES shtools_f95_SOURCES_LENGTH)
 if(shtools_f95_SOURCES_LENGTH EQUAL 0)
-  message(fatal "Missing SHTOOLS sources. Did you foreget to check"
+  message(FATAL_ERROR "Missing SHTOOLS sources. Did you foreget to check"
     "out SHTOOLS submodule?")
 endif()
 
