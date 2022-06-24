@@ -2,7 +2,7 @@
 set(shtools_VERSION 1.1)
 
 define_module(LIBRARY shtools=${shtools_VERSION}
-  DEPENDS BuildSystem>=1.6 Fortran C++>=14 OpenMP Boost
+  DEPENDS BuildSystem>=1.13 Fortran C++>=14 OpenMP Boost
   LAPACK BLAS FFTW3)
 
 # grap all sources sans python extension
