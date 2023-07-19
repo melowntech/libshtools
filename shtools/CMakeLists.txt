@@ -24,3 +24,7 @@ buildsys_library(shtools)
 target_link_libraries(shtools ${MODULE_LIBRARIES})
 target_compile_definitions(shtools PRIVATE ${MODULE_DEFINITIONS})
 
+if (CMAKE_Fortran_COMPILER_ID MATCHES GNU)
+  # disable LTO for GNU fortran
+  target_compile_options(shtools PRIVATE -fno-lto)
+endif()
